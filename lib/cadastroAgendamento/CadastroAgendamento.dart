@@ -33,68 +33,68 @@ class CadastroAgendamento extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Cadastro agendamento'),
-        actions: [
-          IconButton(
-              onPressed: () {
-                salvar(context);
-              },
-              icon: Icon(Icons.save)),
-        ],
-      ),
+      // appBar: AppBar(
+      //   title: Text('Cadastro agendamento'),
+      //   actions: [
+      //     IconButton(
+      //         onPressed: () {
+      //           salvar(context);
+      //         },
+      //         icon: Icon(Icons.save)),
+      //   ],
+      // ),
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // SafeArea(
-              //   child: Container(
-              //     color: Theme.of(context).primaryColor,
-              //     height: 60,
-              //     child: Row(
-              //       children: [
-              //         Expanded(
-              //           child: Container(
-              //             alignment: Alignment.centerLeft,
-              //             child: IconButton(
-              //                 onPressed: () {
-              //                   Navigator.of(context).pop();
-              //                 },
-              //                 icon: Icon(
-              //                   Icons.arrow_back,
-              //                   color: Colors.white,
-              //                 )),
-              //           ),
-              //         ),
-              //         Expanded(
-              //           flex: 2,
-              //           child: Container(
-              //             child: Text('Cadastro agendamento',
-              //                 style: TextStyle(
-              //                     color: Colors.white,
-              //                     fontSize: 18,
-              //                     fontWeight: FontWeight.bold)),
-              //           ),
-              //         ),
-              //         Expanded(
-              //           child: Container(
-              //             alignment: Alignment.centerRight,
-              //             child: IconButton(
-              //                 onPressed: () {
-              //                   salvar(context);
-              //                 },
-              //                 icon: Icon(
-              //                   Icons.save,
-              //                   color: Colors.white,
-              //                 )),
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
+              SafeArea(
+                child: Container(
+                  color: Theme.of(context).primaryColor,
+                  height: 60,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: IconButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              icon: Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                              )),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          child: Text('Cadastro agendamento',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          child: IconButton(
+                              onPressed: () {
+                                salvar(context);
+                              },
+                              icon: Icon(
+                                Icons.save,
+                                color: Colors.white,
+                              )),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               SizedBox(
                 height: 10,
               ),

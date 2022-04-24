@@ -213,19 +213,40 @@ mixin _$CadastroVeiculoController on _CadastroVeiculoController, Store {
     });
   }
 
-  final _$_CadastroVeiculoControllerActionController =
-      ActionController(name: '_CadastroVeiculoController');
+  final _$listUFAtom = Atom(name: '_CadastroVeiculoController.listUF');
 
   @override
-  dynamic addList(Pessoa pessoa) {
-    final _$actionInfo = _$_CadastroVeiculoControllerActionController
-        .startAction(name: '_CadastroVeiculoController.addList');
-    try {
-      return super.addList(pessoa);
-    } finally {
-      _$_CadastroVeiculoControllerActionController.endAction(_$actionInfo);
-    }
+  List<String> get listUF {
+    _$listUFAtom.reportRead();
+    return super.listUF;
   }
+
+  @override
+  set listUF(List<String> value) {
+    _$listUFAtom.reportWrite(value, super.listUF, () {
+      super.listUF = value;
+    });
+  }
+
+  final _$dropDownItemSelectedAtom =
+      Atom(name: '_CadastroVeiculoController.dropDownItemSelected');
+
+  @override
+  String get dropDownItemSelected {
+    _$dropDownItemSelectedAtom.reportRead();
+    return super.dropDownItemSelected;
+  }
+
+  @override
+  set dropDownItemSelected(String value) {
+    _$dropDownItemSelectedAtom.reportWrite(value, super.dropDownItemSelected,
+        () {
+      super.dropDownItemSelected = value;
+    });
+  }
+
+  final _$_CadastroVeiculoControllerActionController =
+      ActionController(name: '_CadastroVeiculoController');
 
   @override
   dynamic limparList() {
@@ -272,7 +293,9 @@ listModelos: ${listModelos},
 selectedRadio: ${selectedRadio},
 selectedItemList: ${selectedItemList},
 labelText: ${labelText},
-fazendoCadastro: ${fazendoCadastro}
+fazendoCadastro: ${fazendoCadastro},
+listUF: ${listUF},
+dropDownItemSelected: ${dropDownItemSelected}
     ''';
   }
 }

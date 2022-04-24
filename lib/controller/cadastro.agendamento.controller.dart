@@ -19,6 +19,14 @@ abstract class _CadastroAgendamentoController  with Store{
   @observable
   Agendamento agendamento = Agendamento();
   @observable
+  Empresa empresa = Empresa();
+  @observable
+  Veiculo veiculo = Veiculo();
+  @observable
+  Pessoa pessoa = Pessoa();
+  @observable
+  Pessoa consultor = Pessoa();
+  @observable
   ObservableList<Pessoa> listPessoas = ObservableList<Pessoa>();
   @observable
   ObservableList<Veiculo> listVeiculos = ObservableList<Veiculo>();
@@ -32,6 +40,8 @@ abstract class _CadastroAgendamentoController  with Store{
   int selectedItemList = 9999;
   @observable
   String labelText = '';
+  @observable
+  bool fazendoCadastro = false;
 
 
 
@@ -57,6 +67,37 @@ abstract class _CadastroAgendamentoController  with Store{
     listConsultores = await agendamentoRepository.requestConsultores(text, selectedRadio);
   }
 
+  Future<bool> cadastrarAgendamento() async{
+    return await agendamentoRepository.cadastrarAgendamento(agendamento);
+  }
+
+   setItensAgendamento(int opcao){
+    switch(opcao){
+      case 1:
+        agendamento.cod_empresa = listEmpresas[selectedItemList].cod_empresa;
+        empresa.cod_empresa = listEmpresas[selectedItemList].cod_empresa;
+        empresa.nome = listEmpresas[selectedItemList].nome;
+        empresa.cnpj = listEmpresas[selectedItemList].cnpj;
+        break;
+      case 2:
+        agendamento.cod_pessoa = listPessoas[selectedItemList].cod_pessoa;
+        pessoa.cod_pessoa = listPessoas[selectedItemList].cod_pessoa;
+        pessoa.cpf_cnpj = listPessoas[selectedItemList].cpf_cnpj;
+        pessoa.nome = listPessoas[selectedItemList].nome;
+        break;
+      case 3:
+        agendamento.cod_veiculo = listVeiculos[selectedItemList].cod_veiculo;
+        veiculo.cod_veiculo = listVeiculos[selectedItemList].cod_veiculo;
+        veiculo.placa = listVeiculos[selectedItemList].placa;
+        veiculo.modelo_descricao = listVeiculos[selectedItemList].modelo_descricao;
+        break;
+      case 4:
+        agendamento.cod_consultor = listConsultores[selectedItemList].cod_consultor;
+        consultor.cod_consultor = listConsultores[selectedItemList].cod_consultor;
+        consultor.nome = listConsultores[selectedItemList].nome;
+        break;
+    }
+  }
 
 
   int getSizeListbyOption(int opcao){
@@ -86,6 +127,22 @@ abstract class _CadastroAgendamentoController  with Store{
   }
 
 
+  String validarCampos(String label, String text){
+    switch(label){
+
+      case 'Código empresa':
+      case 'Código pessoa':
+      case 'Código veículo':
+      case 'Código consultor':
+      case 'Data do agendamento':
+        if(text.isEmpty)
+          return 'Campo $label vazio!';
+
+    }
+
+    return null;
+
+  }
 
   bool validateAndSave(GlobalKey<FormState> formKey) {
     final FormState form = formKey.currentState;

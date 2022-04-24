@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_teste/Util/Connection.dart';
+import 'package:flutter_app_teste/models/agendamento.dart';
 import 'package:flutter_app_teste/models/empresa.dart';
 import 'package:flutter_app_teste/models/endereco.dart';
 import 'package:flutter_app_teste/models/pessoa.dart';
@@ -127,6 +128,21 @@ class AgendamentoRepository{
     }
 
     return listaConsultores;
+  }
+
+  Future<bool> cadastrarAgendamento(Agendamento agendamento) async{
+    Response response;
+    String url = "cadastro_agendamento/insert";
+
+    Map param = {
+      '61': [agendamento.toJson()]
+    };
+
+    response = await conexao(url, false, param);
+    if (response.statusCode == HttpStatus.ok) {
+      return true;
+    }else
+      return false;
   }
 
 

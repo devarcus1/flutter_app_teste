@@ -1,4 +1,6 @@
 
+import 'package:intl/intl.dart';
+
 class Agendamento {
   int cod_agendamento;
   int cod_pessoa;
@@ -32,8 +34,13 @@ class Agendamento {
     data['EMPRESA_CODIGO'] = this.cod_empresa;
     data['OBSERVACAO'] = this.observacao;
     data['STATUS'] = this.status;
-    data['DATA'] = this.data;
+    data['DATA'] = getDataFormat(this.data);
     return data;
+  }
+
+  String getDataFormat(DateTime data) {
+    String textData = DateFormat('dd.MM.yyyy kk:mm').format(data);
+    return textData + ':00';
   }
 
 

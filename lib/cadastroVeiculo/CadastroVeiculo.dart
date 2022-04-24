@@ -33,11 +33,11 @@ class CadastroVeiculo extends StatelessWidget {
       useMask: false);
   final ExampleMask examplePLACA = ExampleMask(
       formatter: MaskTextInputFormatter(
-           filter: {"#": RegExp(r'[A-Za-z0-9]')}),
+          mask: '#######', filter: {"#": RegExp(r'[A-Za-z0-9]')}),
       upperCase: true,
       textInputType: TextInputType.text,
       lenghtField: 7,
-      useMask: false);
+      useMask: true);
   final ExampleMask exampleUFPLACA = ExampleMask(
       formatter: MaskTextInputFormatter(
           filter: {"#": RegExp(r'[A-Za-z0-9]')}),
@@ -47,11 +47,11 @@ class CadastroVeiculo extends StatelessWidget {
       useMask: false);
   final ExampleMask exampleCHASSI = ExampleMask(
       formatter: MaskTextInputFormatter(
-          filter: {"#": RegExp(r'[A-Za-z0-9]')}),
+          mask: '#################',filter: {"#": RegExp(r'[A-Za-z0-9]')}),
       upperCase: true,
       textInputType: TextInputType.text,
       lenghtField: 17,
-      useMask: false);
+      useMask: true);
   final ExampleMask exampleANO = ExampleMask(
       formatter: MaskTextInputFormatter(
           mask: '##/##', filter: {"#": RegExp(r'[0-9]')}),
@@ -61,11 +61,11 @@ class CadastroVeiculo extends StatelessWidget {
       useMask: true);
   final ExampleMask exampleKM = ExampleMask(
       formatter: MaskTextInputFormatter(
-           filter: {"#": RegExp(r'[0-9]')}),
+          mask: '#########', filter: {"#": RegExp(r'[0-9]')}),
       upperCase: true,
       textInputType: TextInputType.number,
       lenghtField: 9,
-      useMask: false);
+      useMask: true);
 
 
   @override
@@ -116,15 +116,9 @@ class CadastroVeiculo extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Padding(
-              //   padding: EdgeInsets.all(20),
-              //   child: Text(
-              //     'Cadastro Veículo',
-              //     style: TextStyle(color: Colors.black, fontSize: 20),
-              //   ),
-              // ),
 
-              //_TextForm(text1, 'text1', 10),
+              SizedBox(height: 10,),
+              _rowTitle(context, 'Veículo'),
 
               Container(
                 child: Row(
@@ -132,9 +126,45 @@ class CadastroVeiculo extends StatelessWidget {
                     Expanded(
                         child:
                             _TextForm(placa, 'Placa', 5, true, examplePLACA)),
+                    // Expanded(
+                    //     child: _TextForm(
+                    //         ufPlaca, 'UF-Placa', 5, true, exampleUFPLACA)),
                     Expanded(
-                        child: _TextForm(
-                            ufPlaca, 'UF-Placa', 5, true, exampleUFPLACA)),
+                      child: Observer(
+                        builder: (_) {
+                          return Padding(
+                            padding: EdgeInsets.all(5),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButtonFormField<String>(
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  hoverColor: Colors.blue.shade100,
+                                  border: OutlineInputBorder(),
+                                  errorStyle: TextStyle(
+                                    color: Colors.red[400],
+                                    fontSize: 9,
+                                  ),
+                                ),
+                                validator: (String value){
+                                  if(value == 'UF')
+                                    return 'Escolher um Estado';
+                                },
+                                isExpanded: true,
+                                value: cadastroVeiculoController
+                                    .dropDownItemSelected,
+                                items: cadastroVeiculoController.listUF
+                                    .map(cadastroVeiculoController.buildMenuItem)
+                                    .toList(),
+                                onChanged: (value) {
+                                  cadastroVeiculoController
+                                      .dropDownItemSelected = value;
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -154,13 +184,7 @@ class CadastroVeiculo extends StatelessWidget {
               SizedBox(
                 height: 5,
               ),
-              Container(
-                  padding: EdgeInsets.fromLTRB(12.0, 2.0, 0, 0),
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'Modelo',
-                    style: TextStyle(color: Colors.blue, fontSize: 12.0),
-                  )),
+              _rowTitle(context, 'Modelo'),
 
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -197,13 +221,7 @@ class CadastroVeiculo extends StatelessWidget {
               SizedBox(
                 height: 5,
               ),
-              Container(
-                  padding: EdgeInsets.fromLTRB(12.0, 2.0, 0, 0),
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'Pessoa',
-                    style: TextStyle(color: Colors.blue, fontSize: 12.0),
-                  )),
+              _rowTitle(context, 'Pessoa'),
 
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -254,6 +272,8 @@ class CadastroVeiculo extends StatelessWidget {
         inputFormatters: cadastroVeiculoController.getInputsFormatters(exampleMask),
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
+          filled: true,
+          hoverColor: Colors.blue.shade100,
           labelText: "$label",
           border: OutlineInputBorder(),
           errorStyle: TextStyle(
@@ -383,32 +403,35 @@ class CadastroVeiculo extends StatelessWidget {
                           },
                         ),
                       ),
-                      ElevatedButton(
-                        child: Icon(
-                          Icons.search,
-                        ),
-                        //splashColor: Colors.grey[300],
-                        onPressed: () async {
-                          // buscar
-                          if (buscar.text.length > 0) {
-                            cadastroVeiculoController.limparList();
-                            FocusScope.of(context).unfocus();
-                            if (isModelo) {
-                              cadastroVeiculoController
-                                  .buscarModelo(buscar.text);
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5),
+                        child: ElevatedButton(
+                          child: Icon(
+                            Icons.search,
+                          ),
+                          //splashColor: Colors.grey[300],
+                          onPressed: () async {
+                            // buscar
+                            if (buscar.text.length > 0) {
+                              cadastroVeiculoController.limparList();
+                              FocusScope.of(context).unfocus();
+                              if (isModelo) {
+                                cadastroVeiculoController
+                                    .buscarModelo(buscar.text);
+                              } else {
+                                cadastroVeiculoController
+                                    .buscarPessoa(buscar.text);
+                              }
+
                             } else {
                               cadastroVeiculoController
-                                  .buscarPessoa(buscar.text);
+                                  .toast('Campo de busca vazio!');
+                              print('Campo de busca vazio!');
                             }
 
-                          } else {
-                            cadastroVeiculoController
-                                .toast('Campo de busca vazio!');
-                            print('Campo de busca vazio!');
-                          }
-
-                          print('PASSOU');
-                        },
+                            print('PASSOU');
+                          },
+                        ),
                       ),
                     ],
                   ),
@@ -533,6 +556,26 @@ class CadastroVeiculo extends StatelessWidget {
                   ])),
         );
       },
+    );
+  }
+
+  Widget _rowTitle(BuildContext context ,String text) {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+          child: Icon(Icons.circle, size: 10, color: Theme.of(context).primaryColor,),
+        ),
+        Expanded(
+          child: Container(
+              padding: EdgeInsets.fromLTRB(5.0, 2.0, 0, 0),
+              alignment: Alignment.topLeft,
+              child: Text(
+                '$text',
+                style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 13.0),
+              )),
+        ),
+      ],
     );
   }
 

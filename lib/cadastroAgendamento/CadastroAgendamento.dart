@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app_teste/controller/cadastro.agendamento.controller.dart';
 import 'package:flutter_app_teste/models/agendamento.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -17,6 +18,7 @@ class CadastroAgendamento extends StatelessWidget {
 
   TextEditingController cod_empresa = TextEditingController();
   TextEditingController descricao_empresa = TextEditingController();
+  TextEditingController cnpj_empresa = TextEditingController();
 
   TextEditingController cod_consultor = TextEditingController();
   TextEditingController nome_consultor = TextEditingController();
@@ -33,6 +35,13 @@ class CadastroAgendamento extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Cadastro agendamento'),
+        actions: [
+          IconButton(
+              onPressed: () {
+                salvar(context);
+              },
+              icon: Icon(Icons.save)),
+        ],
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -40,16 +49,56 @@ class CadastroAgendamento extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // SafeArea(
+              //   child: Container(
+              //     color: Theme.of(context).primaryColor,
+              //     height: 60,
+              //     child: Row(
+              //       children: [
+              //         Expanded(
+              //           child: Container(
+              //             alignment: Alignment.centerLeft,
+              //             child: IconButton(
+              //                 onPressed: () {
+              //                   Navigator.of(context).pop();
+              //                 },
+              //                 icon: Icon(
+              //                   Icons.arrow_back,
+              //                   color: Colors.white,
+              //                 )),
+              //           ),
+              //         ),
+              //         Expanded(
+              //           flex: 2,
+              //           child: Container(
+              //             child: Text('Cadastro agendamento',
+              //                 style: TextStyle(
+              //                     color: Colors.white,
+              //                     fontSize: 18,
+              //                     fontWeight: FontWeight.bold)),
+              //           ),
+              //         ),
+              //         Expanded(
+              //           child: Container(
+              //             alignment: Alignment.centerRight,
+              //             child: IconButton(
+              //                 onPressed: () {
+              //                   salvar(context);
+              //                 },
+              //                 icon: Icon(
+              //                   Icons.save,
+              //                   color: Colors.white,
+              //                 )),
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
               SizedBox(
                 height: 10,
               ),
-              Container(
-                  padding: EdgeInsets.fromLTRB(12.0, 8.0, 0, 0),
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'Empresa',
-                    style: TextStyle(color: Colors.blue, fontSize: 12.0),
-                  )),
+              _rowTitle(context, 'Empresa'),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -67,20 +116,17 @@ class CadastroAgendamento extends StatelessWidget {
                           cod_empresa, 'Código empresa', false, false),
                     ),
                     Expanded(
-                      child: Container(),
+                      child: _TextForm(cnpj_empresa, 'Cnpj', false, false),
                       flex: 1,
                     ),
                   ],
                 ),
               ),
               _TextForm(descricao_empresa, 'Empresa', false, false),
-              Container(
-                  padding: EdgeInsets.fromLTRB(12.0, 8.0, 0, 0),
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'Pessoa',
-                    style: TextStyle(color: Colors.blue, fontSize: 12.0),
-                  )),
+              SizedBox(
+                height: 10,
+              ),
+              _rowTitle(context, 'Pessoa'),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -105,13 +151,10 @@ class CadastroAgendamento extends StatelessWidget {
                 ),
               ),
               _TextForm(nome, 'Nome', false, false),
-              Container(
-                  padding: EdgeInsets.fromLTRB(12.0, 8.0, 0, 0),
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'Veiculo',
-                    style: TextStyle(color: Colors.blue, fontSize: 12.0),
-                  )),
+              SizedBox(
+                height: 10,
+              ),
+              _rowTitle(context, 'Veículo'),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -137,15 +180,9 @@ class CadastroAgendamento extends StatelessWidget {
               ),
               _TextForm(descricao_veiculo, 'Modelo', false, false),
               SizedBox(
-                height: 5,
+                height: 10,
               ),
-              Container(
-                  padding: EdgeInsets.fromLTRB(12.0, 8.0, 0, 0),
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'Consultor',
-                    style: TextStyle(color: Colors.blue, fontSize: 12.0),
-                  )),
+              _rowTitle(context, 'Consultor'),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -190,9 +227,14 @@ class CadastroAgendamento extends StatelessWidget {
                                 );
                               });
                           TimeOfDay picked = await showTimePicker(
-                            context: context,
-                            initialTime: TimeOfDay.now(),
-                          );
+                              context: context,
+                              initialTime: TimeOfDay.now(),
+                              builder: (BuildContext context, Widget child) {
+                                return Theme(
+                                  data: ThemeData.dark(),
+                                  child: child,
+                                );
+                              });
 
                           DateTime data = new DateTime(
                               datetime.year,
@@ -215,6 +257,9 @@ class CadastroAgendamento extends StatelessWidget {
                 height: 5,
               ),
               _TextForm(observacao, 'Observação', true, true),
+              SizedBox(
+                height: 80,
+              ),
             ],
           ),
         ),
@@ -232,10 +277,12 @@ class CadastroAgendamento extends StatelessWidget {
         readOnly: !_readOnly,
         controller: control,
         //keyboardType: exampleMask.textInputType,
-        // inputFormatters:
+        //inputFormatters: [],
         // cadastroPessoaController.getInputsFormatters(exampleMask),
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
+          filled: true,
+          hoverColor: Colors.blue.shade100,
           labelText: "$label",
           border: OutlineInputBorder(),
           errorStyle: TextStyle(
@@ -244,13 +291,12 @@ class CadastroAgendamento extends StatelessWidget {
             fontSize: 9,
           ),
         ),
-        // validator: (value) {
-        //   return cadastroPessoaController.validarCampos(
-        //       label == 'Cpf' || label == 'Cnpj'
-        //           ? cadastroPessoaController.labelForm
-        //           : label,
-        //       value); // value.isEmpty ? '$label não pode ser vazio!' : null;
-        // },
+        validator: (value) {
+          return cadastroAgendamentoController.validarCampos(
+              label,
+              control
+                  .text); // value.isEmpty ? '$label não pode ser vazio!' : null;
+        },
         onSaved: (value) {},
       ),
     );
@@ -258,6 +304,7 @@ class CadastroAgendamento extends StatelessWidget {
 
   void dialogShow(BuildContext context, int opcao) {
     String text = '';
+    buscar.text = '';
     cadastroAgendamentoController.selectedRadio = 1;
     switch (opcao) {
       case 1:
@@ -316,38 +363,43 @@ class CadastroAgendamento extends StatelessWidget {
                           },
                         ),
                       ),
-                      ElevatedButton(
-                        child: Icon(
-                          Icons.search,
-                        ),
-                        //splashColor: Colors.grey[300],
-                        onPressed: () async {
-                          // buscar
-                          if (buscar.text.length > 0) {
-                            cadastroAgendamentoController.limparList();
-                            FocusScope.of(context).unfocus();
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5),
+                        child: ElevatedButton(
+                          child: Icon(
+                            Icons.search,
+                          ),
+                          //splashColor: Colors.grey[300],
+                          onPressed: () async {
+                            // buscar
+                            if (buscar.text.length > 0) {
+                              cadastroAgendamentoController.limparList();
+                              FocusScope.of(context).unfocus();
 
-                            switch(opcao){
-                              case 1:
-                                cadastroAgendamentoController.buscarEmpresa(buscar.text);
-                                break;
-                              case 2:
-                                cadastroAgendamentoController.buscarPessoa(buscar.text);
-                                break;
-                              case 3:
-                                cadastroAgendamentoController.buscarVeiculo(buscar.text);
-                                break;
-                              case 4:
-                                cadastroAgendamentoController.buscarConsultor(buscar.text);
-                                break;
+                              switch (opcao) {
+                                case 1:
+                                  cadastroAgendamentoController
+                                      .buscarEmpresa(buscar.text);
+                                  break;
+                                case 2:
+                                  cadastroAgendamentoController
+                                      .buscarPessoa(buscar.text);
+                                  break;
+                                case 3:
+                                  cadastroAgendamentoController
+                                      .buscarVeiculo(buscar.text);
+                                  break;
+                                case 4:
+                                  cadastroAgendamentoController
+                                      .buscarConsultor(buscar.text);
+                                  break;
+                              }
+                            } else {
+                              cadastroAgendamentoController
+                                  .toast('Campo de busca vazio!');
                             }
-
-                          } else {
-                            cadastroAgendamentoController
-                                .toast('Campo de busca vazio!');
-                          }
-
-                        },
+                          },
+                        ),
                       ),
                     ],
                   ),
@@ -385,35 +437,76 @@ class CadastroAgendamento extends StatelessWidget {
                 ),
                 Observer(builder: (_) {
                   return Visibility(
-                    child:
-                        cadastroAgendamentoController.selectedItemList == 9999
-                            ? Container()
-                            : ElevatedButton(
-                                onPressed: () {
-                                  FocusScope.of(context).unfocus();
-                                  // if (isModelo) {
-                                  //   cadastroVeiculoController
-                                  //       .salveModeloVeiculo();
-                                  //   cod_modelo.text =
-                                  //       cadastroVeiculoController.codigo_modelo;
-                                  //   modelo_descricao.text =
-                                  //       cadastroVeiculoController
-                                  //           .descricao_modelo;
-                                  // } else {
-                                  //   cadastroVeiculoController
-                                  //       .salvePessoaVeiculo();
-                                  //   nome_pessoa.text =
-                                  //       cadastroVeiculoController.nome_pessoa;
-                                  //   cod_pessoa.text =
-                                  //       cadastroVeiculoController.codigo_pessoa;
-                                  // }
-                                  // buscar.text = '';
-                                  // cadastroVeiculoController.limparList();
-                                  // if(!isModelo)
-                                  //   cadastroVeiculoController.validateAndSave(_formKey);
-                                  Navigator.pop(context);
-                                },
-                                child: Text('Salvar')),
+                    child: cadastroAgendamentoController.selectedItemList ==
+                            9999
+                        ? Container()
+                        : ElevatedButton(
+                            onPressed: () {
+                              FocusScope.of(context).unfocus();
+
+                              cadastroAgendamentoController
+                                  .setItensAgendamento(opcao);
+
+                              switch (opcao) {
+                                case 1:
+                                  cod_empresa.text =
+                                      cadastroAgendamentoController
+                                              .empresa.cod_empresa
+                                              .toString() ??
+                                          '';
+                                  descricao_empresa.text =
+                                      cadastroAgendamentoController
+                                              .empresa.nome ??
+                                          '';
+                                  cnpj_empresa.text =
+                                      cadastroAgendamentoController
+                                              .empresa.cnpj ??
+                                          '';
+                                  break;
+                                case 2:
+                                  cod_pessoa.text =
+                                      cadastroAgendamentoController
+                                              .pessoa.cod_pessoa
+                                              .toString() ??
+                                          '';
+                                  cpf_cnpj.text = cadastroAgendamentoController
+                                          .pessoa.cpf_cnpj ??
+                                      '';
+                                  nome.text = cadastroAgendamentoController
+                                          .pessoa.nome ??
+                                      '';
+                                  break;
+                                case 3:
+                                  cod_veiculo.text =
+                                      cadastroAgendamentoController
+                                              .veiculo.cod_veiculo
+                                              .toString() ??
+                                          '';
+                                  placa.text = cadastroAgendamentoController
+                                          .veiculo.placa ??
+                                      '';
+                                  descricao_veiculo.text =
+                                      cadastroAgendamentoController
+                                              .veiculo.modelo_descricao ??
+                                          '';
+                                  break;
+                                case 4:
+                                  cod_consultor.text =
+                                      cadastroAgendamentoController
+                                              .consultor.cod_consultor
+                                              .toString() ??
+                                          '';
+                                  nome_consultor.text =
+                                      cadastroAgendamentoController
+                                              .consultor.nome ??
+                                          '';
+                                  break;
+                              }
+                              cadastroAgendamentoController.limparList();
+
+                              Navigator.pop(context);
+                            },
+                            child: Text('Salvar')),
                   );
                 }),
               ],
@@ -500,5 +593,117 @@ class CadastroAgendamento extends StatelessWidget {
         activeColor: Colors.green,
       );
     });
+  }
+
+  Widget _rowTitle(BuildContext context, String text) {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+          child: Icon(
+            Icons.circle,
+            size: 10,
+            color: Theme.of(context).primaryColor,
+          ),
+        ),
+        Expanded(
+          child: Container(
+              padding: EdgeInsets.fromLTRB(5.0, 2.0, 0, 0),
+              alignment: Alignment.topLeft,
+              child: Text(
+                '$text',
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor, fontSize: 13.0),
+              )),
+        ),
+      ],
+    );
+  }
+
+  void salvar(BuildContext context) async {
+    FocusScope.of(context).unfocus();
+
+    if (cadastroAgendamentoController.validateAndSave(_formKey)) {
+      try {
+        cadastroAgendamentoController.fazendoCadastro = true;
+        showLoadingIndicator(context);
+
+        cadastroAgendamentoController.agendamento.observacao =
+            observacao.text.trim();
+
+        bool cadastrou =
+            await cadastroAgendamentoController.cadastrarAgendamento();
+
+        if (cadastrou) {
+          cadastroAgendamentoController.fazendoCadastro = false;
+          await Future.delayed(Duration(seconds: 4));
+          Navigator.pop(context);
+          print('cadastrou!');
+          //Navigator.pop(context);
+        } else {
+          print('erro ao cadastrar');
+          cadastroAgendamentoController
+              .toast('Ocorreu um erro ao cadastrar...');
+          Navigator.pop(context);
+        }
+      } on Exception catch (e) {
+        print('erro ao cadastrar');
+        cadastroAgendamentoController.toast('Ocorreu um erro ao cadastrar...');
+        Navigator.pop(context);
+      }
+    }
+  }
+
+  void showLoadingIndicator(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        bool fazendoCadastro = true;
+
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8.0))),
+          backgroundColor: Colors.black87,
+          content: Container(
+              padding: EdgeInsets.all(16),
+              color: Colors.black87,
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 16),
+                      child: Observer(
+                        builder: (_) {
+                          return Container(
+                              child: cadastroAgendamentoController
+                                      .fazendoCadastro
+                                  ? CircularProgressIndicator(strokeWidth: 4)
+                                  : Icon(
+                                      Icons.check,
+                                      color: Colors.green,
+                                    ),
+                              width: 32,
+                              height: 32);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 4),
+                      child: Observer(builder: (_) {
+                        return Text(
+                          cadastroAgendamentoController.fazendoCadastro
+                              ? 'Cadastrando …'
+                              : 'Cadastrado com sucesso!',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                          textAlign: TextAlign.center,
+                        );
+                      }),
+                    )
+                  ])),
+        );
+      },
+    );
   }
 }

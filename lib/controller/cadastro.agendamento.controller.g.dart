@@ -25,6 +25,67 @@ mixin _$CadastroAgendamentoController on _CadastroAgendamentoController, Store {
     });
   }
 
+  final _$empresaAtom = Atom(name: '_CadastroAgendamentoController.empresa');
+
+  @override
+  Empresa get empresa {
+    _$empresaAtom.reportRead();
+    return super.empresa;
+  }
+
+  @override
+  set empresa(Empresa value) {
+    _$empresaAtom.reportWrite(value, super.empresa, () {
+      super.empresa = value;
+    });
+  }
+
+  final _$veiculoAtom = Atom(name: '_CadastroAgendamentoController.veiculo');
+
+  @override
+  Veiculo get veiculo {
+    _$veiculoAtom.reportRead();
+    return super.veiculo;
+  }
+
+  @override
+  set veiculo(Veiculo value) {
+    _$veiculoAtom.reportWrite(value, super.veiculo, () {
+      super.veiculo = value;
+    });
+  }
+
+  final _$pessoaAtom = Atom(name: '_CadastroAgendamentoController.pessoa');
+
+  @override
+  Pessoa get pessoa {
+    _$pessoaAtom.reportRead();
+    return super.pessoa;
+  }
+
+  @override
+  set pessoa(Pessoa value) {
+    _$pessoaAtom.reportWrite(value, super.pessoa, () {
+      super.pessoa = value;
+    });
+  }
+
+  final _$consultorAtom =
+      Atom(name: '_CadastroAgendamentoController.consultor');
+
+  @override
+  Pessoa get consultor {
+    _$consultorAtom.reportRead();
+    return super.consultor;
+  }
+
+  @override
+  set consultor(Pessoa value) {
+    _$consultorAtom.reportWrite(value, super.consultor, () {
+      super.consultor = value;
+    });
+  }
+
   final _$listPessoasAtom =
       Atom(name: '_CadastroAgendamentoController.listPessoas');
 
@@ -137,6 +198,22 @@ mixin _$CadastroAgendamentoController on _CadastroAgendamentoController, Store {
     });
   }
 
+  final _$fazendoCadastroAtom =
+      Atom(name: '_CadastroAgendamentoController.fazendoCadastro');
+
+  @override
+  bool get fazendoCadastro {
+    _$fazendoCadastroAtom.reportRead();
+    return super.fazendoCadastro;
+  }
+
+  @override
+  set fazendoCadastro(bool value) {
+    _$fazendoCadastroAtom.reportWrite(value, super.fazendoCadastro, () {
+      super.fazendoCadastro = value;
+    });
+  }
+
   final _$_CadastroAgendamentoControllerActionController =
       ActionController(name: '_CadastroAgendamentoController');
 
@@ -155,13 +232,18 @@ mixin _$CadastroAgendamentoController on _CadastroAgendamentoController, Store {
   String toString() {
     return '''
 agendamento: ${agendamento},
+empresa: ${empresa},
+veiculo: ${veiculo},
+pessoa: ${pessoa},
+consultor: ${consultor},
 listPessoas: ${listPessoas},
 listVeiculos: ${listVeiculos},
 listEmpresas: ${listEmpresas},
 listConsultores: ${listConsultores},
 selectedRadio: ${selectedRadio},
 selectedItemList: ${selectedItemList},
-labelText: ${labelText}
+labelText: ${labelText},
+fazendoCadastro: ${fazendoCadastro}
     ''';
   }
 }

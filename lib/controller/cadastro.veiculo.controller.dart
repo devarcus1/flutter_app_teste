@@ -42,11 +42,16 @@ abstract class _CadastroVeiculoController  with Store{
   String labelText = '';
   @observable
   bool fazendoCadastro = false;
+  @observable
+  List<String> listUF = ['UF','RO','AC','AM','RR','PA','AP','TO','MA','PI','CE','RN','PB','PE','AL','SE','BA','MG','ES','RJ','SP','PR','SC','RS','MS','MT','GO','DF'];
+  @observable
+  String dropDownItemSelected = 'UF';
 
-  @action
-  addList(Pessoa pessoa){
-    print('add Pessoa = ${pessoa.nome}');
-    listPessoas.add(pessoa);
+  DropdownMenuItem<String> buildMenuItem(String item){
+    return DropdownMenuItem(
+        value: item,
+        child: Text(item)
+    );
   }
 
   @action

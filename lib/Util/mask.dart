@@ -13,6 +13,7 @@ class ExampleMask {
   final bool upperCase;
   final int lenghtField;
   final bool useMask;
+  final bool permiteEspaco;
 
   ExampleMask(
       {this.upperCase,
@@ -21,7 +22,8 @@ class ExampleMask {
         this.hint,
         this.textInputType,
         this.lenghtField,
-        this.useMask});
+        this.useMask,
+        this.permiteEspaco});
 
   // ExampleMask example = ExampleMask(
   //     formatter: MaskTextInputFormatter(filter: {"#": RegExp(r'[A-Za-z0-9]')}),

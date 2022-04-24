@@ -32,53 +32,55 @@ class CadastroPessoa extends StatelessWidget {
       upperCase: false,
       textInputType: TextInputType.text,
       lenghtField: 60,
-      useMask: false);
+      useMask: false,
+      permiteEspaco: true);
   final ExampleMask exampleNumbers = ExampleMask(
-      formatter: MaskTextInputFormatter(filter: {"#": RegExp(r'[0-9]')}),
+      formatter: MaskTextInputFormatter(
+          mask: "#######", filter: {"#": RegExp(r'[0-9]')}),
       upperCase: false,
       textInputType: TextInputType.number,
-      lenghtField: 20,
-      useMask: false);
+      lenghtField: 7,
+      useMask: true,
+      permiteEspaco: false);
   final ExampleMask exampleTelefone = ExampleMask(
       formatter: MaskTextInputFormatter(
           mask: "(##) #####-####", filter: {"#": RegExp(r'[0-9]')}),
       upperCase: true,
       textInputType: TextInputType.number,
       lenghtField: 20,
-      useMask: true);
+      useMask: true,
+      permiteEspaco: true);
   final ExampleMask exampleEmail = ExampleMask(
       formatter: MaskTextInputFormatter(filter: {"#": RegExp(r'[A-Za-z0-9]')}),
       upperCase: false,
       textInputType: TextInputType.emailAddress,
       lenghtField: 60,
-      useMask: false);
+      useMask: false,
+      permiteEspaco: false);
   final ExampleMask exampleCpf = ExampleMask(
       formatter: MaskTextInputFormatter(
           mask: "###.###.###-##", filter: {"#": RegExp(r'[0-9]')}),
       upperCase: true,
       textInputType: TextInputType.number,
       lenghtField: 15,
-      useMask: true);
+      useMask: true,
+      permiteEspaco: false);
   final ExampleMask exampleCnpj = ExampleMask(
       formatter: MaskTextInputFormatter(
           mask: "##.###.###/####-##", filter: {"#": RegExp(r'[0-9]')}),
       upperCase: true,
       lenghtField: 20,
       textInputType: TextInputType.number,
-      useMask: true);
+      useMask: true,
+      permiteEspaco: false);
   final ExampleMask exampleCEP = ExampleMask(
       formatter: MaskTextInputFormatter(
           mask: "#####-###", filter: {"#": RegExp(r'[0-9]')}),
       upperCase: true,
       textInputType: TextInputType.number,
       lenghtField: 10,
-      useMask: true);
-  final ExampleMask exampleUF = ExampleMask(
-      formatter: MaskTextInputFormatter(filter: {"#": RegExp(r'[A-Za-z]')}),
-      upperCase: true,
-      textInputType: TextInputType.text,
-      lenghtField: 2,
-      useMask: false);
+      useMask: true,
+      permiteEspaco: false);
 
   @override
   Widget build(BuildContext context) {
@@ -139,15 +141,10 @@ class CadastroPessoa extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
-                Container(
-                    padding: EdgeInsets.fromLTRB(12.0, 2.0, 0, 0),
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'Dados pessoa',
-                      style: TextStyle(color: Colors.blue, fontSize: 12.0),
-                    )),
+                _rowTitle(context,'Dados pessoa'),
+
                 _TextForm(nome, 'Nome', true, example),
                 _TextForm(email, 'Email', true, exampleEmail),
                 Row(
@@ -205,13 +202,7 @@ class CadastroPessoa extends StatelessWidget {
                             telefone, 'Telefone', true, exampleTelefone)),
                   ],
                 ),
-                Container(
-                    padding: EdgeInsets.fromLTRB(12.0, 2.0, 0, 0),
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'Endereço',
-                      style: TextStyle(color: Colors.blue, fontSize: 12.0),
-                    )),
+                _rowTitle(context,'Endereço'),
                 _TextForm(logradouro, 'Logradouro', true, example),
                 Row(
                   children: [
@@ -243,7 +234,14 @@ class CadastroPessoa extends StatelessWidget {
                             child: DropdownButtonHideUnderline(
                               child: DropdownButtonFormField<String>(
                                 decoration: InputDecoration(
+                                  filled: true,
+                                  hoverColor: Colors.blue.shade100,
                                   border: OutlineInputBorder(),
+                                  errorStyle: TextStyle(
+                                    color: Colors.red[400],
+                                    //fontWeight: FontWeight.bold,
+                                    fontSize: 9,
+                                  ),
                                 ),
                                 validator: (String value){
                                   if(value == 'UF')
@@ -264,50 +262,8 @@ class CadastroPessoa extends StatelessWidget {
                           );
                         },
                       ),
+                    ),
 
-                      // DropdownMenuItem(
-                      //   value: cadastroPessoaController.dropDownItemSelected, child: null,
-                      //
-                      // ),
-                    )
-                    // Expanded(
-                    //   child: TypeAheadFormField(
-                    //     textFieldConfiguration: TextFieldConfiguration(
-                    //       controller: uf,
-                    //       decoration: InputDecoration(
-                    //         labelText: 'UF'
-                    //       ),
-                    //     ),
-                    //     itemBuilder: (context, suggestion){
-                    //       return ListTile(
-                    //         title: Text(suggestion),
-                    //       );
-                    //     },
-                    //     suggestionsCallback: (pattern) async {
-                    //       Completer<List<String>> completer = new Completer();
-                    //       //completer.complete(<String>["cobalt", "copper"]);
-                    //       completer.complete(cadastroPessoaController.listUF);
-                    //       return completer.future;
-                    //       //return cadastroPessoaController.listUF.contains(pattern); //CitiesService.getSuggestions(pattern);
-                    //     },
-                    //     transitionBuilder: (context, suggestionsBox, controller) {
-                    //       return suggestionsBox;
-                    //     },
-                    //     onSuggestionSelected: (suggestion) {
-                    //       uf.text = suggestion;
-                    //     },
-                    //     // ignore: missing_return
-                    //     validator: (value) {
-                    //       if (value.isEmpty) {
-                    //         return 'Selecione uma UF';
-                    //       }
-                    //     },
-                    //   ),
-                    // ),
-
-                    // Expanded(
-                    //   child: _TextForm(uf, 'UF', true, exampleUF),
-                    // ),
                   ],
                 ),
               ],
@@ -332,6 +288,8 @@ class CadastroPessoa extends StatelessWidget {
                 cadastroPessoaController.getInputsFormatters(exampleMask),
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
+              filled: true,
+              hoverColor: Colors.blue.shade100,
               labelText: label == 'Cpf' || label == 'Cnpj'
                   ? cadastroPessoaController.labelForm
                   : "$label",
@@ -353,6 +311,26 @@ class CadastroPessoa extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _rowTitle(BuildContext context ,String text) {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+          child: Icon(Icons.circle, size: 10, color: Theme.of(context).primaryColor,),
+        ),
+        Expanded(
+          child: Container(
+              padding: EdgeInsets.fromLTRB(5.0, 2.0, 0, 0),
+              alignment: Alignment.topLeft,
+              child: Text(
+                '$text',
+                style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 13.0),
+              )),
+        ),
+      ],
     );
   }
 
